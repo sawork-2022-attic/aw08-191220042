@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.micropos.order;
 
+import com.micropos.order.model.Order;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Component;
 public class HttpOutboundGateway {
     @Bean
     public IntegrationFlow outGate() {
-        return IntegrationFlows.from("sampleChannel")
-                .handle(Http.outboundGateway("https://api.chucknorris.io/jokes/random")
-                        .httpMethod(HttpMethod.GET)
-                        .expectedResponseType(Joke.class))
+        return IntegrationFlows.from("deliveryChannel")
+                .handle(
+                        Http.outboundGateway("http://localhost:10000/deliver/{orderId}")
+                                .uriVariable("orderId", "headers[orderId]")
+                                .httpMethod(HttpMethod.GET)
+                                .expectedResponseType(String.class))
                 .get();
     }
 }

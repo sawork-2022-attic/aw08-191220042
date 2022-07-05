@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.micropos.order;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -11,9 +11,10 @@ public class HttpInboundGateway {
 
     @Bean
     public IntegrationFlow inGate() {
-        return IntegrationFlows.from(Http.inboundGateway("/check"))
-                .headerFilter("accept-encoding", false)
-                .channel("sampleChannel")
+        return IntegrationFlows.from(
+                        Http.inboundGateway("/delivery/{orderId}")
+                                .headerExpression("orderId", "#pathVariables.orderId"))
+                .channel("deliveryChannel")
                 .get();
     }
 }
