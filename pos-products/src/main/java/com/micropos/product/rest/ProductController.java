@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +30,7 @@ public class ProductController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<List<ProductDto>> listProducts(){
-        List<ProductDto> products = new ArrayList<>(productMapper.toProductsDto(this.productService.products()));
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public Mono<ResponseEntity<Flux<ProductDto>>> listProducts(ServerWebExchange exchange) {
+        return Mono.just(ResponseEntity.ok(productService.products().map(productMapper::toProductDto)));
     }
 }

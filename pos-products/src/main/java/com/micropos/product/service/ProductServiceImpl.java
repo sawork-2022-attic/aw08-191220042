@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -28,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
     @Override
-    public List<Product> products() {
-        return (List<Product>) productRepository.findAll();
+    public Flux<Product> products() {
+        return Flux.fromIterable(productRepository.findAll());
     }
 
     @Override

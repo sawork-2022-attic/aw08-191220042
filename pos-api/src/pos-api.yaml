@@ -248,6 +248,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
   /products/{productId}:
     get:
       summary: Info for a specific product
